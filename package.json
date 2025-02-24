@@ -1,13 +1,13 @@
 {
 	"name": "@shipitdev/sveltepocket",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"keywords": [
 		"svelte",
 		"pocketbase"
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/brennerm/sveltepocket.git"
+		"url": "git+https://github.com/brennerm/sveltepocket.git"
 	},
 	"scripts": {
 		"dev": "vite dev",
