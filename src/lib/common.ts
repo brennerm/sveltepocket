@@ -13,7 +13,7 @@ export type CommonParams = {
 	/** whether to subscribe to realtime updates */
 	realtime?: boolean;
 	/** the snippet to show while loading the data from Pocketbase */
-	loading: Snippet;
+	loading?: Snippet;
 	/** the snippet to show when an error occurs */
 	error?: Snippet<[error: ClientResponseError]>;
 	/** the snippet to show when no record is found or the collection does not exist */

@@ -52,7 +52,7 @@ export const single = <T extends { id: string } = RecordModel>(
 			error: null
 		},
 		(_, update) => {
-			let unsubscribe = () => {};
+			let unsubscribe = () => { };
 
 			const subscribe = (recordId: string) => {
 				if (!realtime) return;
@@ -60,7 +60,6 @@ export const single = <T extends { id: string } = RecordModel>(
 				_pb
 					?.collection(collection)
 					.subscribe(recordId, ({ action, record }) => {
-						console.log(action, record);
 						switch (action) {
 							case 'update':
 								update((data) => ({ ...data, record: record as unknown as T }));
@@ -102,7 +101,7 @@ export const single = <T extends { id: string } = RecordModel>(
 
 			return () => {
 				unsubscribe();
-				unsubscribe = () => {};
+				unsubscribe = () => { };
 			};
 		}
 	);
@@ -132,7 +131,7 @@ export const multi = <T extends { id: string } = RecordModel>(
 			error: null
 		},
 		(_, update) => {
-			let unsubscribe = () => {};
+			let unsubscribe = () => { };
 
 			const subscribe = () => {
 				if (!realtime) return;
@@ -201,7 +200,7 @@ export const multi = <T extends { id: string } = RecordModel>(
 
 			return () => {
 				unsubscribe();
-				unsubscribe = () => {};
+				unsubscribe = () => { };
 			};
 		}
 	);
