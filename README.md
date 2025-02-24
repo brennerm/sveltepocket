@@ -1,6 +1,6 @@
 # SveltePocket
 
-![The Svelte and Pocketbase logo shaking hands](logo.png)
+![The Svelte and Pocketbase logo shaking hands](https://github.com/brennerm/sveltepocket/blob/main/logo.png?raw=true)
 
 Svelte 5-ready stores and components to bring data from any Pocketbase instance into your Svelte application(even with realtime updates 🤫).
 
