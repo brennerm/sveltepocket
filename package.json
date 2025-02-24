@@ -5,6 +5,10 @@
 		"svelte",
 		"pocketbase"
 	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/brennerm/sveltepocket.git"
+	},
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
