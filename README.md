@@ -2,11 +2,17 @@
 
 ![The Svelte and Pocketbase logo shaking hands](https://github.com/brennerm/sveltepocket/blob/main/logo.png?raw=true)
 
-Svelte 5-ready stores and components to bring data from any Pocketbase instance into your Svelte application(even with realtime updates 🤫).
+Svelte 5-ready stores and components to bring data from any Pocketbase instance into your Svelte application (even with realtime updates 🤫).
+
+## Installation
+
+```bash
+npm install @shipitdev/sveltepocket
+```
 
 ## Setup
 
-Call the init method to hand over the Pocketbase client instance. This will be used by all stores and components so make sure it's authenticated according to your needs.
+Call the init method to pass your Pocketbase client SDK instance. This will be used by all stores and components so make sure it's authenticated according to your needs.
 
 ```svelte
 <script>
@@ -20,7 +26,7 @@ Call the init method to hand over the Pocketbase client instance. This will be u
 
 ## Stores
 
-The stores provide an low level API to query data from your Pocketbase instance and are the best choice when you need to process the data instead of just rendering it onto the page.
+The stores provide an low level API to query data from your Pocketbase instance and are the best choice when you need to pre/postprocess the data instead of just rendering it onto the page.
 
 ### auth
 
