@@ -13,7 +13,7 @@ Call the init method to hand over the Pocketbase client instance. This will be u
   import { init } from '@shipitdev/sveltepocket';
   import Pocketbase from 'pocketbase';
 
-	const pb = new Pocketbase(POCKETBASE_URL);
+  const pb = new Pocketbase(POCKETBASE_URL);
   init(pb)
 </script>
 ```
