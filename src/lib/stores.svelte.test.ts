@@ -1,11 +1,11 @@
 import { describe, expect, vi } from 'vitest';
-import { single, multi, auth } from './state.svelte.js';
+import { createRecordStore, createRecordsStore, auth } from './stores.svelte.js';
 import { get } from 'svelte/store';
 import { AUTHORS, pbtest, POSTS, USERS } from '../../tests/vitest-pocketbase-setup.js';
 
-describe.sequential('single', () => {
+describe.sequential('record store', () => {
 	pbtest('non-existing collection', async () => {
-		const store = single('non-existing-collection', 'id');
+		const store = createRecordStore('non-existing-collection', { id: 'id' });
 		store.subscribe(() => { })
 
 		await vi.waitUntil(() => get(store).record !== undefined)
@@ -13,7 +13,7 @@ describe.sequential('single', () => {
 	});
 
 	pbtest('non-existing id', async () => {
-		const store = single('posts', 'non-existing-id');
+		const store = createRecordStore('posts', { id: 'non-existing-id' });
 		store.subscribe(() => { })
 
 		await vi.waitUntil(() => get(store).record !== undefined)
@@ -21,7 +21,7 @@ describe.sequential('single', () => {
 	})
 
 	pbtest('id', async () => {
-		const store = single('posts', '000000000000000');
+		const store = createRecordStore('posts', { id: '000000000000000' });
 		store.subscribe(() => { })
 
 		await vi.waitUntil(() => get(store).record !== undefined)
@@ -32,7 +32,7 @@ describe.sequential('single', () => {
 	})
 
 	pbtest('filter', async () => {
-		const store = single('posts', undefined, 'published = false');
+		const store = createRecordStore('posts', { filter: 'published = false' });
 		store.subscribe(() => { })
 
 		await vi.waitUntil(() => get(store).record !== undefined)
@@ -43,7 +43,7 @@ describe.sequential('single', () => {
 	})
 
 	pbtest('expand', async () => {
-		const store = single('posts', '000000000000000', undefined, 'author');
+		const store = createRecordStore('posts', { id: '000000000000000', expand: 'author' });
 		store.subscribe(() => { })
 
 		await vi.waitUntil(() => get(store).record !== undefined)
@@ -58,7 +58,7 @@ describe.sequential('single', () => {
 	pbtest('realtime', async ({ pb, skip }) => {
 		skip('Realtime test is skipped because we need to find a way to mock the EventSource object');
 
-		const store = single('posts', '000000000000000', undefined, undefined, true);
+		const store = createRecordStore('posts', { id: '000000000000000', realtime: true });
 		store.subscribe(() => { })
 
 		await vi.waitUntil(() => get(store).record !== undefined)
@@ -73,9 +73,9 @@ describe.sequential('single', () => {
 	})
 });
 
-describe.sequential('multi', () => {
+describe.sequential('records store', () => {
 	pbtest('non-existing collection', async () => {
-		const store = multi('non-existing-collection');
+		const store = createRecordsStore('non-existing-collection');
 		store.subscribe(() => { })
 		await vi.waitUntil(() => get(store).records !== undefined)
 
@@ -83,7 +83,7 @@ describe.sequential('multi', () => {
 	});
 
 	pbtest('existing collection', async () => {
-		const store = multi('posts');
+		const store = createRecordsStore('posts');
 		store.subscribe(() => { })
 		await vi.waitUntil(() => get(store).records !== undefined)
 
@@ -97,7 +97,7 @@ describe.sequential('multi', () => {
 	})
 
 	pbtest('sort', async () => {
-		const store = multi('posts', '-id');
+		const store = createRecordsStore('posts', { sort: '-id' });
 		store.subscribe(() => { })
 		await vi.waitUntil(() => get(store).records !== undefined)
 
@@ -111,7 +111,7 @@ describe.sequential('multi', () => {
 	})
 
 	pbtest('expand', async () => {
-		const store = multi('posts', undefined, 'author');
+		const store = createRecordsStore('posts', { expand: 'author' });
 		store.subscribe(() => { })
 		await vi.waitUntil(() => get(store).records !== undefined)
 
@@ -126,7 +126,7 @@ describe.sequential('multi', () => {
 	})
 
 	pbtest('filter', async () => {
-		const store = multi('posts', undefined, undefined, 'published = false');
+		const store = createRecordsStore('posts', { filter: 'published = false' });
 		store.subscribe(() => { })
 		await vi.waitUntil(() => get(store).records !== undefined)
 

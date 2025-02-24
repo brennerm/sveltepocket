@@ -1,6 +1,10 @@
 {
-	"name": "pocketbase-svelte",
+	"name": "@shipitdev/sveltepocket",
 	"version": "0.0.1",
+	"keywords": [
+		"svelte",
+		"pocketbase"
+	],
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
@@ -11,7 +15,7 @@
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint .",
-		"test:unit": "vitest",
+		"test:unit": "vitest --no-file-parallelism",
 		"test": "npm run test:unit -- --run"
 	},
 	"files": [

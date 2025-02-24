@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect } from 'vitest';
-import Multi from './Multi.svelte';
+import Records from './Records.svelte';
 import { AUTHORS, pbtest, POSTS } from '../../../tests/vitest-pocketbase-setup.js';
 import { createRawSnippet } from 'svelte';
 
-describe.sequential('Multi.svelte', () => {
+describe.sequential('Records.svelte', () => {
     pbtest('loading', async () => {
-        const { baseElement } = render(Multi, {
+        const { baseElement } = render(Records, {
             collection: 'posts',
             loading: createRawSnippet(() => ({
                 render: () => '<span>Loading...</span>'
@@ -16,7 +16,7 @@ describe.sequential('Multi.svelte', () => {
     });
 
     pbtest('notFound', async () => {
-        const { baseElement } = render(Multi, {
+        const { baseElement } = render(Records, {
             collection: 'nonexistent',
             notFound: createRawSnippet(() => ({
                 render: () => '<span>Not Found</span>'
@@ -30,7 +30,7 @@ describe.sequential('Multi.svelte', () => {
     pbtest('error', async ({ pb }) => {
         pb.authStore.clear();
 
-        const { baseElement } = render(Multi, {
+        const { baseElement } = render(Records, {
             collection: 'posts',
             error: createRawSnippet((error) => ({
                 render: () => `<span>Error ${error().response.status}</span>`
@@ -42,7 +42,7 @@ describe.sequential('Multi.svelte', () => {
     });
 
     pbtest('render', async () => {
-        const { baseElement } = render(Multi, {
+        const { baseElement } = render(Records, {
             collection: 'posts',
             render: createRawSnippet((records) => ({
                 render: () => `<h1>${records().map((r) => r.title).join(',')}</h1>`
@@ -58,7 +58,7 @@ describe.sequential('Multi.svelte', () => {
     });
 
     pbtest('sort', async () => {
-        const { baseElement } = render(Multi, {
+        const { baseElement } = render(Records, {
             collection: 'posts', sort: '-id',
             render: createRawSnippet((records) => ({
                 render: () => `<h1>${records().map((r) => r.title).join(',')}</h1>`
@@ -70,7 +70,7 @@ describe.sequential('Multi.svelte', () => {
     });
 
     pbtest('filter', async () => {
-        const { baseElement } = render(Multi, {
+        const { baseElement } = render(Records, {
             collection: 'posts', filter: 'published = false',
             render: createRawSnippet((records) => ({
                 render: () => `<h1>${records().map((r) => r.title).join(',')}</h1>`
@@ -82,7 +82,7 @@ describe.sequential('Multi.svelte', () => {
     });
 
     pbtest('expand', async () => {
-        const { baseElement } = render(Multi, {
+        const { baseElement } = render(Records, {
             collection: 'posts', id: '000000000000000', expand: 'author',
             render: createRawSnippet((records) => ({
                 render: () => `<h1>${records().map((r) => r.expand.author.name).join(',')}</h1>`

@@ -2,21 +2,21 @@
 A component that fetches multiple records from a Pocketbase collection and renders them.
 
 ```html
-<Multi collection="posts" sort="-views" expand="author" filter="published = true" realtime listOptions={{ perPage: 10 }}>
-	{#snippet render(records)}
+<Records collection="posts" sort="-views" expand="author" filter="published = true" realtime listOptions={{ perPage: 10 }}>
+	{#snippet render(records: PostRecord[])}
 	<ul>
 		{#each records as post}
 			<li>{post.title}</li>
 		{/each}
 	</ul>
 	{/snippet}
-</Multi>
+</Records>
 ```
 -->
 
 <script lang="ts" generics="T extends {id: string} = RecordModel">
 	import { type Snippet } from 'svelte';
-	import { multi } from '../state.svelte.js';
+	import { createRecordsStore } from '../stores.svelte.js';
 	import type { RecordListOptions, RecordModel, RecordSubscribeOptions } from 'pocketbase';
 	import type { CommonParams } from '../common.js';
 
@@ -42,7 +42,14 @@ A component that fetches multiple records from a Pocketbase collection and rende
 	} = $props();
 
 	let store = $derived(
-		multi<T>(collection, sort, expand, filter, realtime, listOptions, subscribeOptions)
+		createRecordsStore<T>(collection, {
+			sort,
+			expand,
+			filter,
+			realtime,
+			listOptions,
+			subscribeOptions
+		})
 	);
 </script>
 
@@ -53,5 +60,5 @@ A component that fetches multiple records from a Pocketbase collection and rende
 {:else if $store.records === null}
 	{@render notFound?.()}
 {:else if $store.records}
-	{@render render($store.records, $store.totalPages, $store.totalItems)}
+	{@render render?.($store.records, $store.totalPages, $store.totalItems)}
 {/if}

@@ -1,7 +1,8 @@
-import { afterAll, afterEach, beforeAll, beforeEach, test } from 'vitest';
+import { afterAll, beforeAll, beforeEach, test } from 'vitest';
 import Pocketbase from 'pocketbase';
 import schema from './pb_schema.json'
-import { setPB } from '$lib/state.svelte.js';
+import { init } from '$lib/stores.svelte.js';
+import { randomBytes } from 'crypto';
 
 export const AUTHORS = [
   { id: '000000000000000', name: 'John Doe' },
@@ -24,7 +25,7 @@ export const POSTS = [
 ]
 
 export const USERS = [
-  { id: '000000000000000', email: 'foo@bar.com', password: 'password', passwordConfirm: 'password' },
+  { id: randomBytes(20).toString('hex').substring(0, 15), email: `${randomBytes(5).toString('hex')}@bar.com`, password: 'password', passwordConfirm: 'password' },
 ]
 
 interface PbTestFixtures {
@@ -37,16 +38,15 @@ export const pbtest = test.extend<PbTestFixtures>({
   pb: pb
 })
 
-beforeAll(async () => {
+beforeAll(async ({ id }) => {
   await pb.collection('_superusers').authWithPassword('pocketbase@svelte.com', 'pocketbase');
   await pb.collections.import(schema)
 
-  await pb.collections.truncate('users')
   for (const user of USERS) {
     await pb.collection('users').create(user)
   }
 
-  setPB(pb);
+  init(pb);
 });
 
 beforeEach(async () => {
@@ -61,4 +61,9 @@ beforeEach(async () => {
   for (const post of POSTS) {
     await pb.collection('posts').create(post)
   }
+});
+
+afterAll(async () => {
+  await pb.collection('_superusers').authWithPassword('pocketbase@svelte.com', 'pocketbase');
+  await pb.collection('users').delete(USERS[0].id)
 });

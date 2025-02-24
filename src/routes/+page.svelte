@@ -1,23 +1,31 @@
 <script lang="ts">
-	import Multi from '$lib/components/Multi.svelte';
-	import Single from '$lib/components/Single.svelte';
-	import { auth, setPB } from '$lib/state.svelte.js';
+	import Records from '$lib/components/Records.svelte';
+	import Record from '$lib/components/Record.svelte';
+	import { auth, init } from '$lib/stores.svelte.js';
 	import Pocketbase from 'pocketbase';
-	import type { PipelinesRecord } from '$lib/pocketbase-types.js';
+
+	type PostRecord = {
+		id: string;
+		title: string;
+		published: boolean;
+		author: string;
+	};
 
 	const pb = new Pocketbase('http://localhost:8090');
-	setPB(pb);
+	init(pb);
 
-	auth;
 	let form = $state({ email: '', password: '' });
 </script>
 
-<h1>Welcome to your library project</h1>
+<h1>Welcome to the PocketSvelte library</h1>
 
-{JSON.stringify($auth)}
-
-{#if !pb.authStore.isValid}
-	<form onsubmit={() => pb.collection('users').authWithPassword(form.email, form.password)}>
+{#if $auth?.isAuthenticated === false}
+	<form
+		onsubmit={async (event) => {
+			event.preventDefault();
+			await pb.collection('users').authWithPassword(form.email, form.password);
+		}}
+	>
 		<label for="email">Email</label>
 		<input bind:value={form.email} type="email" id="email" name="email" required />
 		<label for="password">Password</label>
@@ -25,18 +33,18 @@
 		<button type="submit">Login</button>
 	</form>
 {:else}
-	<Multi collection="pipelines" realtime listOptions={{ perPage: 20 }}>
+	<Records collection="posts" realtime listOptions={{ perPage: 20 }}>
 		{#snippet loading()}
 			<p>Loading...</p>
 		{/snippet}
 		{#snippet notFound()}
 			<p>Not found</p>
 		{/snippet}
-		{#snippet render(records)}
+		{#snippet render(records: PostRecord[])}
 			<ul>
 				{#each records as record}
 					<li>
-						{record.name}
+						{record.title}
 					</li>
 				{/each}
 			</ul>
@@ -44,29 +52,29 @@
 		{#snippet error(msg)}
 			{JSON.stringify(msg)}
 		{/snippet}
-	</Multi>
+	</Records>
 
-	<Single collection="pipelines" filter="id = '89z4n7hc4c776j2'" realtime>
+	<Record collection="posts" filter="id = '000000000000000'" realtime>
 		{#snippet loading()}
 			<p>Loading...</p>
 		{/snippet}
-		{#snippet render(record: PipelinesRecord)}
-			<p>{record.name}</p>
+		{#snippet render(record: PostRecord)}
+			<p>{record.title}</p>
 		{/snippet}
 		{#snippet notFound()}
 			<p>Not found</p>
 		{/snippet}
-	</Single>
+	</Record>
 
-	<Single collection="pipelines" id="89z4n7hc4c776j2" realtime>
+	<Record collection="posts" id="000000000000000" realtime>
 		{#snippet loading()}
 			<p>Loading...</p>
 		{/snippet}
-		{#snippet render(record)}
-			<p>{record.name}</p>
+		{#snippet render(record: PostRecord)}
+			<p>{record.title}</p>
 		{/snippet}
 		{#snippet notFound()}
 			<p>Not found</p>
 		{/snippet}
-	</Single>
+	</Record>
 {/if}

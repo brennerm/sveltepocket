@@ -7,6 +7,7 @@ import type {
 	ClientResponseError,
 	AuthRecord
 } from 'pocketbase';
+import { BROWSER } from 'esm-env'
 
 export const PB = () => {
 	return _pb;
@@ -14,10 +15,11 @@ export const PB = () => {
 
 let _pb = $state<Pocketbase | null>(null);
 
-export const setPB = (value: Pocketbase) => {
+export const init = (value: Pocketbase) => {
 	_pb = value;
 };
 
+/** a Svelte store that holds the current user's authentication status and user record */
 export const auth = readable<{
 	isAuthenticated: boolean | undefined;
 	isSuperuser: boolean | undefined;
@@ -34,12 +36,17 @@ export const auth = readable<{
 	return unsubscribe;
 });
 
-export const single = <T extends { id: string } = RecordModel>(
+type RecordStoreOptions = {
+	id?: string;
+	filter?: string;
+	expand?: string;
+	realtime?: boolean;
+};
+
+/** create a Svelte store that fetches a single record identified by id or filter from a Pocketbase collection */
+export const createRecordStore = <T extends { id: string } = RecordModel>(
 	collection: string,
-	id?: string,
-	filter?: string,
-	expand?: string,
-	realtime?: boolean
+	{ id, filter, expand, realtime }: RecordStoreOptions = {}
 ) => {
 	return readable<{
 		record: T | undefined | null;
@@ -55,7 +62,7 @@ export const single = <T extends { id: string } = RecordModel>(
 			let unsubscribe = () => { };
 
 			const subscribe = (recordId: string) => {
-				if (!realtime) return;
+				if (!BROWSER || !realtime) return;
 
 				_pb
 					?.collection(collection)
@@ -107,14 +114,19 @@ export const single = <T extends { id: string } = RecordModel>(
 	);
 };
 
-export const multi = <T extends { id: string } = RecordModel>(
+type RecordsStoreOptions = {
+	sort?: string;
+	expand?: string;
+	filter?: string;
+	realtime?: boolean;
+	listOptions?: RecordListOptions;
+	subscribeOptions?: RecordSubscribeOptions;
+};
+
+/** create a Svelte store that fetches multiple records from a Pocketbase collection */
+export const createRecordsStore = <T extends { id: string } = RecordModel>(
 	collection: string,
-	sort: string = 'updated',
-	expand?: string,
-	filter?: string,
-	realtime?: boolean,
-	listOptions?: RecordListOptions,
-	subscribeOptions?: RecordSubscribeOptions
+	{ sort, expand, filter, realtime, listOptions, subscribeOptions }: RecordsStoreOptions = {}
 ) => {
 	return readable<{
 		records: T[] | undefined | null;
@@ -134,7 +146,7 @@ export const multi = <T extends { id: string } = RecordModel>(
 			let unsubscribe = () => { };
 
 			const subscribe = () => {
-				if (!realtime) return;
+				if (!BROWSER || !realtime) return;
 
 				_pb
 					?.collection(collection)

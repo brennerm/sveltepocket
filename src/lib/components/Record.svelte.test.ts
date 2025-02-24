@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/svelte';
 import { describe, expect } from 'vitest';
-import Single from './Single.svelte';
+import Record from './Record.svelte';
 import { AUTHORS, pbtest, POSTS } from '../../../tests/vitest-pocketbase-setup.js';
 import { createRawSnippet } from 'svelte';
 
-describe.sequential('Single.svelte', () => {
+describe.sequential('Record.svelte', () => {
     pbtest('loading', async () => {
-        const { baseElement } = render(Single, {
+        const { baseElement } = render(Record, {
             collection: 'posts', id: '000000000000000',
             loading: createRawSnippet(() => ({
                 render: () => '<span>Loading...</span>'
@@ -16,7 +16,7 @@ describe.sequential('Single.svelte', () => {
     });
 
     pbtest('notFound', async () => {
-        const { baseElement } = render(Single, {
+        const { baseElement } = render(Record, {
             collection: 'posts', id: 'nonexistent',
             notFound: createRawSnippet(() => ({
                 render: () => '<span>Not Found</span>'
@@ -30,7 +30,7 @@ describe.sequential('Single.svelte', () => {
     pbtest('error', async ({ pb }) => {
         pb.authStore.clear();
 
-        const { baseElement } = render(Single, {
+        const { baseElement } = render(Record, {
             collection: 'posts', id: '000000000000000',
             error: createRawSnippet((error) => ({
                 render: () => `<span>Error ${error().response.status}</span>`
@@ -42,7 +42,7 @@ describe.sequential('Single.svelte', () => {
     });
 
     pbtest('id', async () => {
-        const { baseElement } = render(Single, {
+        const { baseElement } = render(Record, {
             collection: 'posts', id: '000000000000000',
             render: createRawSnippet((record) => ({
                 render: () => `<h1>${record().title}</h1>`
@@ -58,7 +58,7 @@ describe.sequential('Single.svelte', () => {
     });
 
     pbtest('filter', async () => {
-        const { baseElement } = render(Single, {
+        const { baseElement } = render(Record, {
             collection: 'posts', filter: 'published = false',
             render: createRawSnippet((record) => ({
                 render: () => `<h1>${record().title}</h1>`
@@ -70,7 +70,7 @@ describe.sequential('Single.svelte', () => {
     });
 
     pbtest('expand', async () => {
-        const { baseElement } = render(Single, {
+        const { baseElement } = render(Record, {
             collection: 'posts', id: '000000000000000', expand: 'author',
             render: createRawSnippet((record) => ({
                 render: () => `<h1>${record().expand.author.name}</h1>`
