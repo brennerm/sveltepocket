@@ -16,11 +16,11 @@ Call the init method to pass your Pocketbase client SDK instance. This will be u
 
 ```svelte
 <script>
-	import { init } from '@shipitdev/sveltepocket';
-	import Pocketbase from 'pocketbase';
+  import { init } from '@shipitdev/sveltepocket';
+  import Pocketbase from 'pocketbase';
 
-	const pb = new Pocketbase(POCKETBASE_URL);
-	init(pb);
+  const pb = new Pocketbase(POCKETBASE_URL);
+  init(pb);
 </script>
 ```
 
@@ -34,11 +34,11 @@ A readable store that holds the current user's authentication status and user re
 
 ```svelte
 <script>
-	import { auth } from '@shipitdev/sveltepocket';
+  import { auth } from '@shipitdev/sveltepocket';
 </script>
 
 {#if $auth.isAuthenticated}
-	<p>Welcome, {$auth.user.email}!</p>
+  <p>Welcome, {$auth.user.email}!</p>
 {/if}
 ```
 
@@ -48,13 +48,13 @@ Creates a readable store that fetches a single record identified by id or filter
 
 ```svelte
 <script>
-	import { createRecordStore } from '@shipitdev/sveltepocket';
+  import { createRecordStore } from '@shipitdev/sveltepocket';
 
-	const post = createRecordStore('posts', { id: 'YOUR_RECORD_ID' });
+  const post = createRecordStore('posts', { id: 'YOUR_RECORD_ID' });
 </script>
 
 {#if $post.record}
-	<h1>{$post.record.title}</h1>
+  <h1>{$post.record.title}</h1>
 {/if}
 ```
 
@@ -64,17 +64,17 @@ Creates a readable store that fetches multiple records from a Pocketbase collect
 
 ```svelte
 <script>
-	import { createRecordsStore } from '@shipitdev/sveltepocket';
+  import { createRecordsStore } from '@shipitdev/sveltepocket';
 
-	const posts = createRecordsStore('posts');
+  const posts = createRecordsStore('posts');
 </script>
 
 {#if $posts.records}
-	<ul>
-		{#each $posts.records as post}
-			<li>{post.title}</li>
-		{/each}
-	</ul>
+  <ul>
+    {#each $posts.records as post}
+      <li>{post.title}</li>
+    {/each}
+  </ul>
 {/if}
 ```
 
@@ -91,17 +91,17 @@ A component that fetches a single record either by ID or filter from a Pocketbas
 ```svelte
 <!-- by ID -->
 <Record collection="posts" id="YOUR_RECORD_ID" expand="author">
-	{#snippet render(post)}
-		<h1>{post.title}</h1>
-		<span> by {post.expand.author.name}</span>
-	{/snippet}
+  {#snippet render(post)}
+    <h1>{post.title}</h1>
+    <span> by {post.expand.author.name}</span>
+  {/snippet}
 </Record>
 
 <!-- by filter -->
 <Record collection="posts" filter="published = true">
-	{#snippet render(post)}
-		<h1>{post.title}</h1>
-	{/snippet}
+  {#snippet render(post)}
+    <h1>{post.title}</h1>
+  {/snippet}
 </Record>
 ```
 
@@ -111,13 +111,13 @@ A component that fetches multiple records from a Pocketbase collection and rende
 
 ```svelte
 <Records collection="posts" expand="author" sort="-publishedAt" filter="published = true">
-	{#snippet render(posts)}
-		<ul>
-			{#each posts as post}
-				<li>{post.title} by {post.expand.author.name}</li>
-			{/each}
-		</ul>
-	{/snippet}
+  {#snippet render(posts)}
+    <ul>
+      {#each posts as post}
+        <li>{post.title} by {post.expand.author.name}</li>
+      {/each}
+    </ul>
+  {/snippet}
 </Records>
 ```
 
@@ -130,13 +130,13 @@ Combined with Svelte's reactivity, your app will rerender automatically when the
 ```svelte
 <!-- this will always show the latest data -->
 <Records collection="posts" realtime>
-	{#snippet render(posts)}
-		<ul>
-			{#each posts as post}
-				<li>{post.title}</li>
-			{/each}
-		</ul>
-	{/snippet}
+  {#snippet render(posts)}
+    <ul>
+      {#each posts as post}
+        <li>{post.title}</li>
+      {/each}
+    </ul>
+  {/snippet}
 </Records>
 ```
 
@@ -149,10 +149,10 @@ This gives you full type safety on the returned records.
 
 ```svelte
 <script>
-	import { createRecordsStore } from '@shipitdev/sveltepocket';
-	import type { PostRecord } from './pocketbase-types.d.ts';
+  import { createRecordsStore } from '@shipitdev/sveltepocket';
+  import type { PostRecord } from './pocketbase-types.d.ts';
 
-	const posts = createRecordsStore<PostRecord>('posts');
+  const posts = createRecordsStore<PostRecord>('posts');
 </script>
 ```
 
