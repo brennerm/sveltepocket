@@ -75,7 +75,7 @@ export const createRecordStore = <T extends { id: string } = RecordModel>(
 								update((data) => ({ ...data, record: null }));
 								break;
 						}
-					})
+					}, { expand })
 					.then((value) => {
 						unsubscribe = value;
 					});
@@ -179,7 +179,7 @@ export const createRecordsStore = <T extends { id: string } = RecordModel>(
 								}
 							});
 						},
-						subscribeOptions
+						{ ...subscribeOptions, expand, filter }
 					)
 					.then((value) => {
 						unsubscribe = value;
