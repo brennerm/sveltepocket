@@ -44,7 +44,6 @@ jobs:
       uses: cycjimmy/semantic-release-action@v4
       with:
         branches: main
-        dry_run: true
         extra_plugins: |
           - "@semantic-release/git"
       env:
