@@ -8,6 +8,9 @@ module.exports = {
       "@semantic-release/commit-analyzer",
       {
         "preset": "angular",
+        "releaseRules": [
+          { "type": "build", "release": "patch" }
+        ],
       }
     ],
     "@semantic-release/release-notes-generator",
