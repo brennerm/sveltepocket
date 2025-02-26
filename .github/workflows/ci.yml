@@ -1,0 +1,39 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ ci ]
+  pull_request:
+    branches: [ ci ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Download and extract PocketBase
+      run: |
+        wget https://github.com/pocketbase/pocketbase/releases/download/v0.25.8/pocketbase_0.25.8_linux_amd64.zip
+        unzip pocketbase_0.25.8_linux_amd64.zip
+
+    - name: Start PocketBase in background
+      run: |
+        ./pocketbase serve &
+        # Wait for PocketBase to start
+        sleep 2
+        ./pocketbase superuser upsert pocketbase@svelte.com pocketbase
+
+    - name: Run tests
+      run: npm test
